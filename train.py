@@ -112,6 +112,7 @@ if __name__ == "__main__":
     train_annotations = "train_annotations.txt"
     dev_annotations = "dev_annotations.txt"
 
+
     batch_size = 2
     vocab = create_vocab(train_annotations)
 

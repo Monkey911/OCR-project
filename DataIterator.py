@@ -20,7 +20,6 @@ class LoadData(Dataset):
 
     def __getitem__(self, index):
         img_name, label = self.annotations[index].split("\t")
-        #img = self.load_img("text_images/" + img_path)
         img = cv2.imread(self.image_dir + img_name)
         img = self.rehsape_img(img)
 
@@ -34,8 +33,6 @@ class LoadData(Dataset):
     #https://gist.github.com/jdhao/f8422980355301ba30b6774f610484f2
     def rehsape_img(self, img):
         desired_size = 500
-        #cv2.imshow("aa", img)
-        #cv2.waitKey(0)
 
         old_size = img.shape[:2] # old_size is in (height, width) format
         ratio = float(desired_size)/max(old_size)
@@ -52,8 +49,6 @@ class LoadData(Dataset):
         color = [0, 0, 0]
         new_img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT,
             value=color)
-        #cv2.imshow("aa", new_img)
-        #cv2.waitKey(0)
         return new_img
 
 

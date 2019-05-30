@@ -28,6 +28,7 @@ if __name__ == "__main__":
     #annotations = "dev_annotations.txt"
     annotations = "dev_annotations.txt"
     #annotations = "train_annotations.txt"
+
     batch_size = 1
     vocab = create_vocab("train_annotations.txt")
     inv_vocab = {v: k for k, v in vocab.items()}
@@ -51,11 +52,3 @@ if __name__ == "__main__":
             cv2.imshow(img_name[0], im.data.numpy())
             cv2.waitKey(0)
             cv2.destroyAllWindows()
-
-
-        #if torch.cuda.is_available():
-        #    images = Variable(images.cuda())
-        #    labels = Variable(labels.cuda())
-        #gold = labels.contiguous().view(-1)
-        #pred, fpred = model(images, labels)
-        #predictions = pred.argmax(2).contiguous().view(-1)

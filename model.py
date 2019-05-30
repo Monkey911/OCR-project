@@ -76,21 +76,21 @@ class CaptionNet(nn.Module):
         if torch.cuda.is_available():
             cnn_model.cuda()
 
-        #self.text_encoder = TextEncoder(vocab_size)
         self.encoder = ImageEncoder(cnn_model)
         self.decoder = Decoder(vocab_size)
-        #self.dense = nn.Linear(3456, 100)
+
         self.dense = nn.Linear(25600, 10000)
         self.output = nn.Linear(200, vocab_size)
 
     def forward(self, images, labels):
-        # Encoding Images
-        #t_enc = self.text_encoder(ger_captions)
+
+
         images = images.type(torch.FloatTensor)
         if torch.cuda.is_available():
             images = Variable(images.cuda())
         output = self.encoder(images)
         output = self.decoder(output)
+
         output = self.dense(output)
         output = output.view(output.size(0), 50, -1)
 

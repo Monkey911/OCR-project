@@ -11,7 +11,6 @@ class ImageEncoder(nn.Module):
 
     def __init__(self, model):
         super(ImageEncoder, self).__init__()
-        #print(model)
         partial_alexnet = nn.Sequential(*list(model.children())[1:-7])  # delete the last fc layers.
         self.partial_alexnet = partial_alexnet
 
@@ -25,48 +24,12 @@ class ImageEncoder(nn.Module):
         self.dense = nn.Linear(in_features=196, out_features=200)
 
     def forward(self, images):
-        #print("encoder")
+        # making color dimension to be the second dimension
         images.transpose_(2, 3)
         images.transpose_(1, 2)
         r = self.partial_alexnet(images)
         r = r.view(r.size(0), r.size(1), -1)
         return r
-
-
-        r = self.conv1(images)
-        #print(r.shape)
-        r = self.relu(r)
-        #print(r.shape)
-        r = self.maxpool(r)
-        #print(r.shape)
-        r = self.conv2(r)
-        #print(r.shape)
-        r = self.relu(r)
-        #print(r.shape)
-        r = self.maxpool(r)
-        #print(r.shape)
-        #print(r.shape)
-        r = self.conv3(r)
-        r = self.relu(r)
-        r = self.conv4(r)
-        r = self.relu(r)
-        r = self.conv5(r)
-        r = self.relu(r)
-        r = self.maxpool(r)
-
-        #print(r.shape)
-        r = r.view(r.size(0), r.size(1), -1)
-        #r = r.view(r.size(0), -1)
-
-        #r = r.unsqueeze(2)#.repeat(1, 28)
-        #print(r.shape)
-        #r = r.view(r.size(0), r.size(1), -1)
-        #r = self.dense(r)
-        #r = r.view(r.size(0), 50, -1)
-        #print(r.shape)
-        #r = r.view(r.size(0), r.size(1), -1)
-        return r
-
 
 
 class Attention(nn.Module):
@@ -116,22 +79,18 @@ class CaptionNet(nn.Module):
         if torch.cuda.is_available():
             cnn_model.cuda()
 
-        #self.text_encoder = TextEncoder(vocab_size)
         self.encoder = ImageEncoder(cnn_model)
         self.decoder = Decoder(vocab_size)
-        #self.dense = nn.Linear(3456, 100)
         self.dense = nn.Linear(25600, 10000)
         self.output = nn.Linear(200, vocab_size)
 
     def forward(self, images, labels):
-        # Encoding Images
-        #t_enc = self.text_encoder(ger_captions)
         images = images.type(torch.FloatTensor)
         if torch.cuda.is_available():
             images = Variable(images.cuda())
         output = self.encoder(images)
         output = self.decoder(output)
-        #print(output.shape)
+
         output = self.dense(output)
         output = output.view(output.size(0), 50, -1)
 
